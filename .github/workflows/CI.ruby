@@ -24,6 +24,7 @@ jobs:
         run: echo "::set-output name=dir::$(yarn cache dir)"
       - uses: actions/cache@v1
         with:
+
           path: ${{ steps.yarn-cache.outputs.dir }}
           key: ${{ matrix.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
@@ -33,10 +34,12 @@ jobs:
       - run: yarn lint
       - run: yarn test
   deploy-ganache:
+
     runs-on: ubuntu-latest
     name: Deploy to Ganache
     services:
       ganache:
+
         image: trufflesuite/ganache-cli
         ports:
           - 8545:8545
@@ -63,24 +66,29 @@ jobs:
           INFURA_API_KEY: ${{ secrets.INFURA_API_KEY }}
           MNEMONIC: ${{ secrets.MNEMONIC }}
       - run: yarn
+
       - run: yarn compile
       - run: yarn truffle-compile
       - run: yarn replace-factory
       - run: yarn truffle-migrate
   deploy-ropsten:
+
     runs-on: ubuntu-latest
     name: Deploy to Ropsten
     if: github.ref == 'refs/heads/staging'
     steps:
+
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
         with:
+
           node-version: '12.x'
       - run: npm install -g yarn
       - id: yarn-cache
         run: echo "::set-output name=dir::$(yarn cache dir)"
       - uses: actions/cache@v1
         with:
+
           path: ${{ steps.yarn-cache.outputs.dir }}
           key: ${{ matrix.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
